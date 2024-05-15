@@ -13,4 +13,8 @@ class LoginViewModel extends ChangeNotifier {
     _password = password;
     notifyListeners();
   }
+
+  Future<bool> login() async {
+    return _email == 'user@example.com' && _password == 'password123';
+  }
 }

@@ -1,6 +1,6 @@
 # Kraftig
 
-**Kraftig** ("powerful" from Gernam) is a mobile application designed to connect users with personal trainers. It enables them to receive customized fitness plans tailored to their specific needs, goals, and available equipment. The app facilitates interaction between users and trainers and supports the management of subscription payments.
+**Kraftig** (which means “powerful" in German) is a mobile application designed to connect users with personal trainers. It enables them to receive customized fitness plans tailored to their specific needs, goals, and available equipment. The app facilitates interaction between users and trainers and supports the management of subscription payments.
 
 It's a playground project inspired by one of the projects I participated in as a developer. Given I can’t just copy-paste the production code, I recreate the basic concepts by writing something similar to expand my GitHub portfolio and provide code samples for the sake of job seeking.
 

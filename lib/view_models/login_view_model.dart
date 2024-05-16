@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
-class LoginViewModel extends ChangeNotifier {
-  String _email = '';
-  String _password = '';
+import '../services/api_service.dart';
 
-  void setEmail(String email) {
-    _email = email;
+class LoginViewModel extends ChangeNotifier {
+  final ApiService apiService;
+  LoginViewModel({required this.apiService});
+
+
+  String _username = '';
+  String _password = '';
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  void setUsermame(String email) {
+    _username = email;
     notifyListeners();
   }
 
@@ -15,6 +23,20 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   Future<bool> login() async {
-    return _email == 'user@example.com' && _password == 'password123';
+    _isLoading = true;
+    notifyListeners();
+
+    final result = await apiService.login(_username, _password);
+
+    _isLoading = false;
+    if (result != null) {
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } else {
+      _errorMessage = "Invalid credentials";
+      notifyListeners();
+      return false;
+    }
   }
 }

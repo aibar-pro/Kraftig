@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:kraftig/models/user_credential_model.dart';
 import '../services/api_service.dart';
 
 class SignupViewModel extends ChangeNotifier {
@@ -7,18 +8,18 @@ class SignupViewModel extends ChangeNotifier {
 
   SignupViewModel({required this.apiService});
 
-  String _username = '';
+  String _login = '';
   String _password = '';
   bool _isLoading = false;
   String? _errorMessage;
 
-  String get username => _username;
+  String get login => _login;
   String get password => _password;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
   void setUsername(String username) {
-    _username = username;
+    _login = username;
     notifyListeners();
   }
 
@@ -31,7 +32,8 @@ class SignupViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final result = await apiService.createUser(_username, _password);
+    final newUser = UserCredentialModel(login: _login, password: _password);
+    final result = await apiService.createUser(newUser);
 
     _isLoading = false;
     if (result) {

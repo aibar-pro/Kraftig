@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'services/api_service.dart';
 import 'view_models/home_view_model.dart';
 import 'view_models/login_view_model.dart';
+import 'view_models/profile_view_model.dart';
 import 'views/home_view.dart';
 import 'views/login_view.dart';
+import 'views/profile_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,12 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final apiService = ApiService(baseUrl: 'http://0.0.0.0:8080');
+    final homeViewModel = HomeViewModel(apiService: apiService);
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => HomeViewModel(apiService: apiService)),
-        ChangeNotifierProvider(create: (_) => LoginViewModel(apiService: apiService)),
+        ChangeNotifierProvider(create: (_) => homeViewModel),
+        ChangeNotifierProvider(create: (_) => LoginViewModel(apiService: apiService, homeViewModel: homeViewModel)),
         ChangeNotifierProvider(create: (_) => SignupViewModel(apiService: apiService)),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel(apiService: apiService, homeViewModel: homeViewModel)),
       ],
       child: MaterialApp(
         title: 'Karftig',
@@ -35,9 +39,10 @@ class MyApp extends StatelessWidget {
         ),
         home: HomeView(),
         routes: {
+          '/home': (context) => HomeView(),
           '/login':(context) => LoginView(),
           '/signup':(context) => SignupView(),
-          '/home': (context) => HomeView(),
+          '/profile': (context) => ProfileView(),
         },
       ),
     );

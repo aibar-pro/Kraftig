@@ -1,22 +1,24 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
-class LoginViewModel extends ChangeNotifier {
+class SignupViewModel extends ChangeNotifier {
   final ApiService apiService;
-  LoginViewModel({required this.apiService});
 
+  SignupViewModel({required this.apiService});
 
   String _username = '';
   String _password = '';
   bool _isLoading = false;
   String? _errorMessage;
 
+  String get username => _username;
+  String get password => _password;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  void setUsermame(String email) {
-    _username = email;
+  void setUsername(String username) {
+    _username = username;
     notifyListeners();
   }
 
@@ -25,19 +27,19 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> login() async {
+  Future<bool> signup() async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await apiService.login(_username, _password);
+    final result = await apiService.createUser(_username, _password);
 
     _isLoading = false;
-    if (result != null) {
+    if (result) {
       _errorMessage = null;
       notifyListeners();
       return true;
     } else {
-      _errorMessage = "Invalid credentials";
+      _errorMessage = "Username already exists or other error";
       notifyListeners();
       return false;
     }

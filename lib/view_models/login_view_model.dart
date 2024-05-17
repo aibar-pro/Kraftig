@@ -1,22 +1,27 @@
+
 import 'package:flutter/material.dart';
+import 'package:kraftig/models/user_credential_model.dart';
+import 'package:kraftig/models/user_profile_model.dart';
 
 import '../services/api_service.dart';
+import 'home_view_model.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final ApiService apiService;
-  LoginViewModel({required this.apiService});
+  final HomeViewModel homeViewModel;
 
-
-  String _username = '';
+  String _login = '';
   String _password = '';
   bool _isLoading = false;
   String? _errorMessage;
+  
+  LoginViewModel({required this.apiService, required this.homeViewModel});
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  void setUsermame(String email) {
-    _username = email;
+  void setLogin(String login) {
+    _login = login;
     notifyListeners();
   }
 
@@ -28,18 +33,28 @@ class LoginViewModel extends ChangeNotifier {
   Future<bool> login() async {
     _isLoading = true;
     notifyListeners();
-
-    final result = await apiService.login(_username, _password);
+    final userCredentials = UserCredentialModel(login: _login, password: _password);
+    final result = await apiService.login(userCredentials);
 
     _isLoading = false;
     if (result != null) {
       _errorMessage = null;
+      // final profile = await apiService.fetchUserProfile();
+      // homeViewModel.login(result['accessToken']!, UserProfileModel(username: _username));
+      homeViewModel.login(UserProfileModel(login: _login));
       notifyListeners();
       return true;
+      // if (profile != null) {
+      //   homeViewModel.login(result['accessToken']!, profile);
+      //   notifyListeners();
+      //   return true;
+      // } else {
+      //   _errorMessage = "Failed to fetch profile after login";
+      // }
     } else {
       _errorMessage = "Invalid credentials";
-      notifyListeners();
-      return false;
     }
+    notifyListeners();
+    return false;
   }
 }

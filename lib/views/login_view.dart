@@ -25,7 +25,7 @@ class LoginView extends StatelessWidget {
             title: 
               const Text(
                 'Login', 
-                style: AppTextStyles.headLine,
+                style: AppTextStyles.headline,
               ),
           ),
           body: SafeArea(
@@ -41,30 +41,46 @@ class LoginView extends StatelessWidget {
                     child: Column(
                       children: [
                         TextField(
-                          onChanged: (value) => model.setUsermame(value),
-                          decoration: const InputDecoration(labelText: 'Phone number'),
+                          onChanged: (value) => model.setLogin(value),
+                          decoration: InputDecoration(
+                            labelText: 'Phone number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                            ),
+                          ),
                         ),
+                        const SizedBox(height: AppPadding.medium),
                         TextField(
                           onChanged: (value) => model.setPassword(value),
-                          decoration: const InputDecoration(labelText: 'Password'),
+                          decoration: InputDecoration(
+                            labelText: 'Password', 
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+                              ),
+                          ),
                           obscureText: true,
                         ),
                         const SizedBox(height: AppPadding.large),
-                        PrimaryButton(
-                          text: 'Login', 
-                          onPressed: () async {
-                            bool success = await model.login();
-                            if (!context.mounted) return;
-                            if (success) {
-                              Navigator.pop(context);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: 
-                                  Text(model.errorMessage?? 'Login failed'),
-                                ),
-                              );
-                            }
-                          }
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            PrimaryButton(
+                              text: 'Login', 
+                              onPressed: () async {
+                                bool success = await model.login();
+                                if (!context.mounted) return;
+                                if (success) {
+                                  Navigator.pop(context);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: 
+                                      Text(model.errorMessage?? 'Login failed'),
+                                    ),
+                                  );
+                                }
+                              }
+                            ),
+                          ],
                         ),
                       ],
                     ),

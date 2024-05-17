@@ -32,7 +32,7 @@ class AppTextStyles {
     fontSize: 32, 
     fontWeight: FontWeight.bold,
   );
-  static const TextStyle headLine = TextStyle(
+  static const TextStyle headline = TextStyle(
     fontSize: 24, 
     fontWeight: FontWeight.w600,
   );

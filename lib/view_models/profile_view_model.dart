@@ -11,6 +11,7 @@ class ProfileViewModel extends ChangeNotifier {
   UserProfileModel? _userProfile;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isEditing = false;
 
   ProfileViewModel({required this.apiService, required this.homeViewModel}) {
      _userProfile = homeViewModel.userProfile;
@@ -19,6 +20,7 @@ class ProfileViewModel extends ChangeNotifier {
   UserProfileModel? get userProfile => _userProfile;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get isEditing => _isEditing;
 
   void setName(String name) {
     if (_userProfile != null) {
@@ -32,6 +34,25 @@ class ProfileViewModel extends ChangeNotifier {
       _userProfile!.age = age;
       notifyListeners();
     }
+  }
+
+  void setHeight(double height) {
+    if (_userProfile != null) {
+      _userProfile!.height = height;
+      notifyListeners();
+    }
+  }
+
+  void setWeight(double weight) {
+    if (_userProfile != null) {
+      _userProfile!.weight = weight;
+      notifyListeners();
+    }
+  }
+
+  void toggleEditMode() {
+    _isEditing = !_isEditing;
+    notifyListeners();
   }
 
   Future<void> fetchProfile() async {

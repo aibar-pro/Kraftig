@@ -1,13 +1,13 @@
 
-class TokenModel {
+class AuthTokenModel {
   final String accessToken;
   final String refreshToken;
   final int expiresIn;
 
-  TokenModel({required this.accessToken, required this.refreshToken, required this.expiresIn});
+  AuthTokenModel({required this.accessToken, required this.refreshToken, required this.expiresIn});
 
-  factory TokenModel.fromJson(Map<String, dynamic> json) {
-    return TokenModel(
+  factory AuthTokenModel.fromJson(Map<String, dynamic> json) {
+    return AuthTokenModel(
       accessToken: json['accessToken'],
       refreshToken: json['refreshToken'],
       expiresIn: json['expiresIn'],

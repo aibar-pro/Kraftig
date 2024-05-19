@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Colors
 class AppColors {
   static const Color primaryButtonBackground = Color(0xFFffe357);
+  static const Color secondaryButtonBackground = Color(0x08373331);
   static const Color accentButtonBackground = Color(0xFF774980);
   static const Color backgroundGradientStart = Color(0xFF35FFE2);
   static const Color backgroundGradientEnd = Color(0xFFdffffb);
@@ -35,6 +36,14 @@ class AppTextStyles {
   static const TextStyle headline = TextStyle(
     fontSize: 24, 
     fontWeight: FontWeight.w600,
+  );
+  static const TextStyle body = TextStyle(
+    fontSize: 14, 
+    color: AppColors.textHighEmphasis
+  );
+  static const TextStyle hintText = TextStyle(
+    fontSize: 12, 
+    color: AppColors.textMediumEmphasis
   );
 }
 

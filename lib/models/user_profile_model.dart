@@ -3,6 +3,8 @@ class UserProfileModel {
   
   String? name;
   int? age;
+  double? weight;
+  double? height;
 
   UserProfileModel({required this.login, this.name, this.age});
 

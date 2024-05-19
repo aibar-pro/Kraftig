@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:http/http.dart' as http;
-import 'package:kraftig/models/token_model.dart';
+import 'package:kraftig/models/auth_token_model.dart';
 import 'package:kraftig/models/user_credential_model.dart';
 import 'package:kraftig/models/user_profile_model.dart';
 
@@ -20,7 +20,7 @@ class ApiService {
     expiresIn = expiresIn;
   }
 
-  Future<TokenModel?> login(UserCredentialModel userCredentials) async {
+  Future<AuthTokenModel?> login(UserCredentialModel userCredentials) async {
     final url = Uri.parse('$baseUrl/login');
     
     final response = await http.post(
@@ -33,7 +33,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      final token = TokenModel.fromJson(data);
+      final token = AuthTokenModel.fromJson(data);
       accessToken = token.accessToken;
       expiresIn = token.expiresIn;
       return token;

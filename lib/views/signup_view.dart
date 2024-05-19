@@ -6,6 +6,8 @@ import '../view_components/primary_button.dart';
 import '../view_models/signup_view_model.dart';
 
 class SignupView extends StatelessWidget {
+  const SignupView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SignupViewModel>(
@@ -44,6 +46,7 @@ class SignupView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppBorderRadius.medium),
                       ),
                     ),
+                    keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: AppPadding.medium),
                   TextField(

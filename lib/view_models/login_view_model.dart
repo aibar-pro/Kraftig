@@ -41,7 +41,7 @@ class LoginViewModel extends ChangeNotifier {
       _errorMessage = null;
       // final profile = await apiService.fetchUserProfile();
       // homeViewModel.login(result['accessToken']!, UserProfileModel(username: _username));
-      homeViewModel.login(UserProfileModel(login: _login));
+      homeViewModel.login(UserProfileModel(login: _login, name:'Boba', age: 42));
       notifyListeners();
       return true;
       // if (profile != null) {

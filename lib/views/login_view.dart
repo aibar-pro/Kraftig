@@ -7,6 +7,8 @@ import '../view_models/login_view_model.dart';
 import '../resources/constants.dart';
 
 class LoginView extends StatelessWidget {
+  const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginViewModel>(
@@ -48,6 +50,7 @@ class LoginView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(AppBorderRadius.medium),
                             ),
                           ),
+                          keyboardType: TextInputType.phone,
                         ),
                         const SizedBox(height: AppPadding.medium),
                         TextField(

@@ -37,12 +37,12 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: HomeView(),
+        home: const HomeView(),
         routes: {
-          '/home': (context) => HomeView(),
-          '/login':(context) => LoginView(),
-          '/signup':(context) => SignupView(),
-          '/profile': (context) => ProfileView(),
+          '/home': (context) => const HomeView(),
+          '/login':(context) => const LoginView(),
+          '/signup':(context) => const SignupView(),
+          '/profile': (context) => const ProfileView(),
         },
       ),
     );

@@ -1,7 +1,12 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:kraftig/view_components/inline_edit_button.dart';
 import 'package:provider/provider.dart';
 
+import '../models/photo_group.dart';
 import '../resources/constants.dart';
 import '../view_models/profile_view_model.dart';
 import '../view_components/primary_button.dart';
@@ -30,13 +35,6 @@ class ProfileView extends StatelessWidget {
               'Profile',
               style: AppTextStyles.headline,
             ),
-            actions: [
-              if (!model.isEditing)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: model.toggleEditMode,
-                ),
-            ],
           ),
           body: SafeArea(
             child: Padding(
@@ -45,7 +43,17 @@ class ProfileView extends StatelessWidget {
                 left: AppPadding.extraLarge,
                 right: AppPadding.extraLarge,
               ),
-              child: model.isEditing ? _buildEditView(context, model) : _buildViewMode(model),
+              child: ListView(
+                children: [
+                  if (model.isEditing) 
+                    _buildEditView(context, model)
+                  else ...[
+                    _buildViewMode(context, model),
+                    const SizedBox(height: AppPadding.large),
+                    _buildPhotoGallery(context, model),
+                  ],
+                ],
+              ),
             ),
           ),
         ),
@@ -53,29 +61,74 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildViewMode(ProfileViewModel model) {
+  Widget _buildViewMode(BuildContext context, ProfileViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Hello, ${model.userProfile?.name ?? model.userProfile?.login}!',
-          maxLines: 1,
-          style: AppTextStyles.headline,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Hello${model.userProfile?.name != null ? ', ${model.userProfile?.name}' : ''}!',
+              maxLines: 1,
+              style: AppTextStyles.headline,
+            ),
+            TextButton.icon(
+              onPressed: () { 
+                model.homeViewModel.logout();
+                Navigator.pop(context);
+              }, 
+              label: const Text('logout', style: AppTextStyles.body,),
+              icon: const Icon(Icons.logout, size: AppFontSizes.body,),
+            ),
+          ],
         ),
+        
         const SizedBox(height: AppPadding.large),
-        Text(
-          'Age: ${model.userProfile?.age ?? ''}',
-          style: AppTextStyles.body,
-        ),
-        const SizedBox(height: AppPadding.medium),
-        Text(
-          'Height: ${model.userProfile?.height ?? ''}',
-          style: AppTextStyles.body,
-        ),
-        const SizedBox(height: AppPadding.medium),
-        Text(
-          'Weight: ${model.userProfile?.weight ?? ''}',
-          style: AppTextStyles.body,
+        Container(
+          padding: const EdgeInsets.all(AppPadding.medium,),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+            color: AppColors.cardBackground,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Age: ${model.userProfile?.age ?? ''}',
+                          style: AppTextStyles.body,
+                        ),
+                        const SizedBox(width: AppPadding.medium,),
+                        Text(
+                          'Height: ${model.userProfile?.height ?? '-'}',
+                          style: AppTextStyles.body,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppPadding.medium,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Weight: ${model.userProfile?.weight ?? '-'}',
+                          style: AppTextStyles.body,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              InlineEditButton(onPressed: model.toggleEditMode),
+            ],
+          ),
         ),
       ],
     );
@@ -189,6 +242,139 @@ class ProfileView extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildPhotoGallery(BuildContext context, ProfileViewModel model) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Gallery',
+                style: AppTextStyles.subheadline,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  padding: const EdgeInsets.only(
+                    left: AppPadding.small,
+                    top: AppPadding.small,
+                    bottom: AppPadding.small,
+                  ),
+                  onPressed: () => model.takePhoto(), 
+                  icon: const Icon(Icons.photo_camera, size: AppFontSizes.subheadline,),
+                ),
+                IconButton(
+                  padding: const EdgeInsets.only(
+                    left: AppPadding.small,
+                    top: AppPadding.small,
+                    bottom: AppPadding.small,
+                  ),
+                  onPressed: () => model.pickImage(), 
+                  icon: const Icon(Icons.upload_file, size: AppFontSizes.subheadline,),
+                ),
+              ],
+            ),
+          ],
+        ),
+         ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)).toList(),
+        // Container(
+        //   padding: const EdgeInsets.all(AppPadding.medium),
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+        //     color: AppColors.cardBackground,
+        //   ),
+        //   child: Stack(
+        //     children: [
+        //       Row(
+        //         mainAxisAlignment: MainAxisAlignment.end,
+        //         children: [
+        //           InlineEditButton(onPressed: () {}),
+        //         ],
+        //       ),
+        //       const SizedBox(height: AppPadding.medium),
+        //       GridView.builder(
+        //         shrinkWrap: true,
+        //         physics: const NeverScrollableScrollPhysics(),
+        //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        //           crossAxisCount: 3,
+        //           crossAxisSpacing: 8,
+        //           mainAxisSpacing: 8,
+        //         ),
+        //         itemCount: model.photos.length,
+        //         itemBuilder: (context, index) {
+        //           return GestureDetector(
+        //             onTap: () {
+        //               // Handle photo tap
+        //             },
+        //             child: Image.file(
+        //               File(model.photos[index]),
+        //               fit: BoxFit.cover,
+        //             ),
+        //           );
+        //         },
+        //       ),          
+        //     ],
+        //   ),
+        // ),
+      ],
+    );
+  }
+
+   Widget _buildPhotoGroup(BuildContext context, PhotoGroup group, ProfileViewModel model) {
+    return Container(
+      margin: const EdgeInsets.only(top: AppPadding.large),
+      padding: const EdgeInsets.all(AppPadding.medium),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppBorderRadius.medium),
+        color: AppColors.cardBackground,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                group.name ?? DateFormat('dd MMM yyyy').format(group.date),
+                style: AppTextStyles.body,
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // Navigate to the photo group edit view
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppPadding.medium),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: group.photos.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  // Handle photo tap
+                },
+                child: Image.file(
+                  File(group.photos[index]),
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

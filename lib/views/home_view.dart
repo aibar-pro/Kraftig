@@ -24,7 +24,8 @@ class HomeView extends StatelessWidget {
               children: [
                 model.isLoggedIn
                 ? PrimaryButton(
-                  text: '👤 Profile', 
+                  text: 'Profile', 
+                  icon: Icons.person,
                   onPressed: () {
                     if (kDebugMode) {
                         print('Profile button pressed');
@@ -33,7 +34,8 @@ class HomeView extends StatelessWidget {
                   },
                 )
                 : PrimaryButton(
-                  text: '🔑 Login', 
+                  text: 'Login',
+                  icon: Icons.login, 
                   onPressed: () {
                     if (kDebugMode) {
                         print('Login button pressed');

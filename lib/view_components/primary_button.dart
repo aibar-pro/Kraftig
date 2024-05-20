@@ -3,8 +3,10 @@ import '../resources/constants.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
+  final IconData? icon;
   final VoidCallback onPressed;
-  const PrimaryButton({super.key, required this.text, required this.onPressed});
+
+  const PrimaryButton({super.key, required this.text, this.icon, required this.onPressed});
   
   @override
   Widget build(BuildContext context) {
@@ -19,11 +21,13 @@ class PrimaryButton extends StatelessWidget {
           ),
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
+      child: 
+      Row(
+        children: [
+          if (icon != null) Icon(icon, size: AppFontSizes.body,),
+          if (icon != null) const SizedBox(width: AppPadding.small,),
+          Text(text, style: AppTextStyles.body,),
+        ],
       ),
     );
   }

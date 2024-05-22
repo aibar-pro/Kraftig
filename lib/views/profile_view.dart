@@ -69,7 +69,7 @@ class ProfileView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Hello${model.userProfile?.name != null ? ', ${model.userProfile?.name}' : ''}!',
+              'Hello${model.userProfile?.username != null ? ', ${model.userProfile?.username}' : ''}!',
               maxLines: 1,
               style: AppTextStyles.headline,
             ),
@@ -144,7 +144,7 @@ class ProfileView extends StatelessWidget {
         ),
         const SizedBox(height: AppPadding.large),
         TextFormField(
-          initialValue: model.userProfile?.name ?? '',
+          initialValue: model.userProfile?.username ?? '',
           onChanged: (value) => model.setName(value),
           decoration: InputDecoration(
             labelText: 'Name',
@@ -231,6 +231,7 @@ class ProfileView extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Profile updated successfully')),
                   );
+                  model.toggleEditMode();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Failed to update profile')),
@@ -281,7 +282,7 @@ class ProfileView extends StatelessWidget {
             ),
           ],
         ),
-         ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)).toList(),
+         ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)),
         // Container(
         //   padding: const EdgeInsets.all(AppPadding.medium),
         //   decoration: BoxDecoration(

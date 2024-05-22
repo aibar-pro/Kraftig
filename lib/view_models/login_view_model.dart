@@ -39,18 +39,21 @@ class LoginViewModel extends ChangeNotifier {
     _isLoading = false;
     if (result != null) {
       _errorMessage = null;
-      // final profile = await apiService.fetchUserProfile();
-      // homeViewModel.login(result['accessToken']!, UserProfileModel(username: _username));
-      homeViewModel.login(UserProfileModel(login: _login, name:'Boba', age: 42));
-      notifyListeners();
-      return true;
-      // if (profile != null) {
-      //   homeViewModel.login(result['accessToken']!, profile);
-      //   notifyListeners();
-      //   return true;
-      // } else {
-      //   _errorMessage = "Failed to fetch profile after login";
-      // }
+      final profile = await apiService.fetchUserProfile(_login);
+      if (profile != null) {
+        homeViewModel.login(profile);
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = "Failed to fetch profile after login";
+        // Temporary implementation
+        final newProfile = await apiService.createUserProfile(UserProfileModel(login: userCredentials.login));
+        if (newProfile != null) {
+          homeViewModel.login(newProfile);
+          notifyListeners();
+          return true;
+        }
+      }
     } else {
       _errorMessage = "Invalid credentials";
     }

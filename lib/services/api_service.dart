@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:kraftig/models/auth_token_model.dart';
 import 'package:kraftig/models/user_credential_model.dart';
@@ -16,12 +16,12 @@ class ApiService {
     accessToken = accessToken;
   }
 
-  void setExpiresIn(UnsignedLong expiresIn) {
+  void setExpiresIn(int expiresIn) {
     expiresIn = expiresIn;
   }
 
   Future<AuthTokenModel?> login(UserCredentialModel userCredentials) async {
-    final url = Uri.parse('$baseUrl/login');
+    final url = Uri.parse('$baseUrl/auth/login');
     
     final response = await http.post(
       url,
@@ -42,10 +42,10 @@ class ApiService {
     }
   }
 
-  Future<UserProfileModel?> fetchUserProfile() async {
+  Future<UserProfileModel?> fetchUserProfile(String login) async {
     if (accessToken == null) return null;
 
-    final url = Uri.parse('$baseUrl/profile');
+    final url = Uri.parse('$baseUrl/user/profile/$login');
     final response = await http.get(
       url,
       headers: {
@@ -61,10 +61,34 @@ class ApiService {
     }
   }
 
+  Future<UserProfileModel?> createUserProfile(UserProfileModel profile) async {
+    if (accessToken == null) return null;
+
+    final url = Uri.parse('$baseUrl/user/profile');
+    if (kDebugMode) {
+      print(jsonEncode(profile.toJson()).toString());
+    }
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(profile.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return UserProfileModel.fromJson(data);
+    } else {
+      return null;
+    }
+  }
+
   Future<bool> updateUserProfile(UserProfileModel profile) async {
     if (accessToken == null) return false;
 
-    final url = Uri.parse('$baseUrl/profile');
+    final url = Uri.parse('$baseUrl/user/profile/${profile.login}');
     final response = await http.put(
       url,
       headers: {

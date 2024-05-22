@@ -28,7 +28,7 @@ class ProfileViewModel extends ChangeNotifier {
 
   void setName(String name) {
     if (_userProfile != null) {
-      _userProfile!.name = name;
+      _userProfile!.username = name;
       notifyListeners();
     }
   }
@@ -63,7 +63,8 @@ class ProfileViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final result = await apiService.fetchUserProfile();
+// TODO: Consider refactoring
+    final result = await apiService.fetchUserProfile(homeViewModel.userProfile!.login);
 
     _isLoading = false;
     if (result != null) {

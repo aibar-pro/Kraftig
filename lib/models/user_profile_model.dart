@@ -1,26 +1,30 @@
 class UserProfileModel {
   final String login;
   
-  String? name;
+  String? username;
   int? age;
-  double? weight;
   double? height;
+  double? weight;
 
-  UserProfileModel({required this.login, this.name, this.age});
+  UserProfileModel({required this.login, this.username, this.age, this.height, this.weight});
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) {
     return UserProfileModel(
       login: json['login'],
-      name: json['name'],
+      username: json['username'],
       age: json['age'],
+      height: json['height'],
+      weight: json['weight'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'login': login,
-      'name': name,
+      'username': username,
       'age': age,
+      'height': height,
+      'weight': weight,
     };
   }
 }

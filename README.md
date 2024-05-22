@@ -16,3 +16,12 @@ The project follows the MVVM (Model-View-ViewModel) architecture approach.
 ## Technical Stack
 * Flutter: For cross-platform mobile app development.
 * Provider: For state management and dependency injection.
+
+## Notes
+Updated 'Info.plist' 
+> <key>NSPhotoLibraryUsageDescription</key>
+> <string>This app requires access to the photo library.</string>
+> <key>NSMicrophoneUsageDescription</key>
+> <string>This app requires access to the microphone.</string>
+> <key>NSCameraUsageDescription</key>
+> <string>This app requires access to the camera.</string>

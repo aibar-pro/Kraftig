@@ -36,6 +36,7 @@ dependencies:
   animated_weight_picker: ^1.0.3
   image_picker: ^1.1.1
   intl: ^0.19.0
+  popover: ^0.3.0+1
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,10 @@
 
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kraftig/view_components/inline_edit_button.dart';
+import 'package:kraftig/views/photo_gallery_view.dart';
 import 'package:provider/provider.dart';
 
-import '../models/photo_group.dart';
 import '../resources/constants.dart';
 import '../view_models/profile_view_model.dart';
 import '../view_components/primary_button.dart';
@@ -50,7 +48,7 @@ class ProfileView extends StatelessWidget {
                   else ...[
                     _buildViewMode(context, model),
                     const SizedBox(height: AppPadding.large),
-                    _buildPhotoGallery(context, model),
+                    const PhotoGalleryView(),
                   ],
                 ],
               ),
@@ -246,43 +244,43 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoGallery(BuildContext context, ProfileViewModel model) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            const Expanded(
-              child: Text(
-                'Gallery',
-                style: AppTextStyles.subheadline,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  padding: const EdgeInsets.only(
-                    left: AppPadding.small,
-                    top: AppPadding.small,
-                    bottom: AppPadding.small,
-                  ),
-                  onPressed: () => model.takePhoto(), 
-                  icon: const Icon(Icons.photo_camera, size: AppFontSizes.subheadline,),
-                ),
-                IconButton(
-                  padding: const EdgeInsets.only(
-                    left: AppPadding.small,
-                    top: AppPadding.small,
-                    bottom: AppPadding.small,
-                  ),
-                  onPressed: () => model.pickImage(), 
-                  icon: const Icon(Icons.upload_file, size: AppFontSizes.subheadline,),
-                ),
-              ],
-            ),
-          ],
-        ),
-         ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)),
+  // Widget _buildPhotoGallery(BuildContext context, ProfileViewModel model) {
+  //   return Column(
+  //     children: [
+  //       Row(
+  //         children: [
+  //           const Expanded(
+  //             child: Text(
+  //               'Gallery',
+  //               style: AppTextStyles.subheadline,
+  //             ),
+  //           ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.end,
+  //             children: [
+  //               IconButton(
+  //                 padding: const EdgeInsets.only(
+  //                   left: AppPadding.small,
+  //                   top: AppPadding.small,
+  //                   bottom: AppPadding.small,
+  //                 ),
+  //                 onPressed: () => model.takePhoto(), 
+  //                 icon: const Icon(Icons.photo_camera, size: AppFontSizes.subheadline,),
+  //               ),
+  //               IconButton(
+  //                 padding: const EdgeInsets.only(
+  //                   left: AppPadding.small,
+  //                   top: AppPadding.small,
+  //                   bottom: AppPadding.small,
+  //                 ),
+  //                 onPressed: () => model.pickImage(), 
+  //                 icon: const Icon(Icons.upload_file, size: AppFontSizes.subheadline,),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //        ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)),
         // Container(
         //   padding: const EdgeInsets.all(AppPadding.medium),
         //   decoration: BoxDecoration(
@@ -322,60 +320,7 @@ class ProfileView extends StatelessWidget {
         //     ],
         //   ),
         // ),
-      ],
-    );
-  }
-
-   Widget _buildPhotoGroup(BuildContext context, PhotoGroup group, ProfileViewModel model) {
-    return Container(
-      margin: const EdgeInsets.only(top: AppPadding.large),
-      padding: const EdgeInsets.all(AppPadding.medium),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-        color: AppColors.cardBackground,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                group.name ?? DateFormat('dd MMM yyyy').format(group.date),
-                style: AppTextStyles.body,
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  // Navigate to the photo group edit view
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: AppPadding.medium),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: group.photos.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  // Handle photo tap
-                },
-                child: Image.file(
-                  File(group.photos[index]),
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+//       ],
+//     );
+//   }
 }

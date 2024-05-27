@@ -4,9 +4,12 @@
 
 It's a playground project inspired by one of the projects I participated in as a developer. Given I can’t just copy-paste the production code, I recreate the basic concepts by writing something similar to expand my GitHub portfolio and provide code samples for the sake of job seeking.
 
+## App Demo GIF
+![UI_demo](./resources/Kraftig_demo_20240527.gif)
+
 ## Features
-* **User Registration**: Sign up using a mobile number.
-* **Profile Management**: Users can enter and update their fitness levels, goals, and available equipment.
+* **User Registration**: Sign up using a mobile number (not validating rn).
+* **Profile Management**: Users can enter and update their measurements and upload photos.
 * **Custom Workout Plans**: Users can request customized workout plans from certified personal trainers.
 * **Payment Integration**: Supports one-time and installment payments for workout plans.
 
@@ -19,9 +22,10 @@ The project follows the MVVM (Model-View-ViewModel) architecture approach.
 
 ## Notes
 Updated 'Info.plist' 
-> <key>NSPhotoLibraryUsageDescription</key>
-> <string>This app requires access to the photo library.</string>
-> <key>NSMicrophoneUsageDescription</key>
-> <string>This app requires access to the microphone.</string>
-> <key>NSCameraUsageDescription</key>
-> <string>This app requires access to the camera.</string>
+>\<key\>NSPhotoLibraryUsageDescription\<\/key\>  
+\<string\>This app requires access to the photo library.\<\/string\>  
+  
+\<key\>NSMicrophoneUsageDescription\<\/key\>  
+\<string\>This app requires access to the microphone.\<\/string\>  
+\<key\>NSCameraUsageDescription\<\/key\>  
+\<string\>This app requires access to the camera.\<\/string\>

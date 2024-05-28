@@ -17,7 +17,8 @@ class ProfileViewModel extends ChangeNotifier {
      _userProfile = homeViewModel.userProfile;
   }
 
-  UserProfileModel? get userProfile => _userProfile;
+  // UserProfileModel? get userProfile => _userProfile;
+  UserProfileModel? get userProfile => homeViewModel.userProfile;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isEditing => _isEditing;

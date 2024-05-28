@@ -1,7 +1,8 @@
 class PhotoGroup {
+  int id;
   String? name;
   DateTime date;
   List<String> photos;
 
-  PhotoGroup({this.name, required this.date, required this.photos});
+  PhotoGroup({required this.id, this.name, required this.date, required this.photos});
 }

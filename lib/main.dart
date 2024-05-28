@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kraftig/view_models/signup_view_model.dart';
-import 'package:kraftig/views/signup_view.dart';
 import 'package:provider/provider.dart';
 
 import 'services/api_service.dart';
 import 'view_models/home_view_model.dart';
 import 'view_models/login_view_model.dart';
 import 'view_models/profile_view_model.dart';
+import 'view_models/photo_gallery_view_model.dart';
+import 'view_models/signup_view_model.dart';
+import 'views/signup_view.dart';
 import 'views/home_view.dart';
 import 'views/login_view.dart';
 import 'views/profile_view.dart';
@@ -22,13 +23,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final apiService = ApiService(baseUrl: 'http://0.0.0.0:8080');
     final homeViewModel = HomeViewModel(apiService: apiService);
+    final profileViewModel = ProfileViewModel(apiService: apiService, homeViewModel: homeViewModel);
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => homeViewModel),
         ChangeNotifierProvider(create: (_) => LoginViewModel(apiService: apiService, homeViewModel: homeViewModel)),
         ChangeNotifierProvider(create: (_) => SignupViewModel(apiService: apiService)),
-        ChangeNotifierProvider(create: (_) => ProfileViewModel(apiService: apiService, homeViewModel: homeViewModel)),
+        ChangeNotifierProvider(create: (_) => profileViewModel),
+        ChangeNotifierProvider(create: (_) => PhotoGalleryViewModel(profileViewModel: profileViewModel)),
       ],
       child: MaterialApp(
         title: 'Karftig',

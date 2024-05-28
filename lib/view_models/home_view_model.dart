@@ -24,7 +24,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void logout() {
-    apiService.setAccessToken('');
+    apiService.logout();
     _userProfile = null;
     _isLoggedIn = false;
     notifyListeners();

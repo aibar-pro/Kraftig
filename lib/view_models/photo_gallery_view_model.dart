@@ -1,18 +1,43 @@
 
-import 'package:flutter/material.dart';
+
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kraftig/view_models/profile_view_model.dart';
 
 import '../models/photo_group.dart';
+import '../persistence/database_helper.dart';
+import '../persistence/file_system_helper.dart';
 
 class PhotoGalleryViewModel extends ChangeNotifier {
+  final ProfileViewModel profileViewModel;
   List<PhotoGroup> _photoGroups = [];
   bool _isEditing = false;
+
+  PhotoGalleryViewModel({required this.profileViewModel});
 
   List<PhotoGroup> get photoGroups => _photoGroups;
   bool get isEditing => _isEditing;
 
+  String get userLogin => profileViewModel.userProfile!.login;
+
   void toggleEditMode() {
     _isEditing = !_isEditing;
+    notifyListeners();
+  }
+
+  Future<void> loadPhotoGroups(String userLogin) async {
+    final db = DatabaseHelper();
+    final groups = await db.queryAllPhotoGroups(userLogin);
+    _photoGroups = groups.map((g) => PhotoGroup(
+      id: g['id'],
+      name: g['name'],
+      date: DateTime.parse(g['date']),
+      photos: [],
+    )).toList();
+    for (var group in _photoGroups) {
+      final photos = await db.queryPhotosByGroupId(group.id);
+      group.photos = photos.map((p) => p['path'].toString()).toList();
+    }
     notifyListeners();
   }
 
@@ -22,12 +47,20 @@ class PhotoGalleryViewModel extends ChangeNotifier {
 
     if (image != null) {
       if (_photoGroups.isEmpty) {
-        createGroup(null, DateTime.now());
+        if (kDebugMode) {
+          print("Photo Gallery: Creating first group");
+        }
+        createGroup(null, DateTime.now(), userLogin);
       }
+      final filename = image.name;
+      final bytes = await image.readAsBytes();
+      if (kDebugMode) {
+          print("Photo Gallery: groups count - ${_photoGroups.length}");
+        }
       if (groupId != null ) {
-        addPhoto(image.path, groupId);
+        addPhoto(groupId, filename, bytes);
       } else {
-        addPhoto(image.path, _photoGroups.first.date.toString());
+        addPhoto(_photoGroups.first.id.toString(), filename, bytes);
       }
       notifyListeners();
     }
@@ -39,20 +72,29 @@ class PhotoGalleryViewModel extends ChangeNotifier {
 
     if (image != null) {
       if (_photoGroups.isEmpty) {
-        createGroup(null, DateTime.now());
+        createGroup(null, DateTime.now(), userLogin);
       }
+      final filename = image.name;
+      final bytes = await image.readAsBytes();
       if (groupId != null ) {
-        addPhoto(image.path, groupId);
+        addPhoto(groupId, filename, bytes);
       } else {
-        addPhoto(image.path, _photoGroups.first.date.toString());
+        addPhoto(_photoGroups.first.id.toString(), filename, bytes);
       }
       notifyListeners();
     }
   }
 
-  void addPhoto(String path, String groupId) {
-    final group = _photoGroups.firstWhere((group) => group.date.toString() == groupId);
-    group.photos.add(path);
+  void addPhoto(String groupId, String filename,Uint8List bytes) async {
+    final fs = FileSystemHelper();
+    await fs.savePhoto(filename, bytes);
+    final db = DatabaseHelper();
+    await db.insertPhoto({
+      'path': filename,
+      'group_id': int.parse(groupId),
+    });
+    final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
+    group.photos.add(filename);
     notifyListeners();
   }
 
@@ -64,25 +106,44 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createGroup(String? name, DateTime date) {
-    _photoGroups.add(PhotoGroup(name: name, date: date, photos: []));
+  void createGroup(String? name, DateTime date, String userLogin) async {
+    final db = DatabaseHelper();
+    final groupId = await db.insertPhotoGroup({
+      'name': name,
+      'date': date.toIso8601String(),
+      'login': userLogin,
+    });
+    _photoGroups.add(PhotoGroup(
+      id: groupId,
+      name: name,
+      date: date,
+      photos: [],
+    ));
     notifyListeners();
   }
 
-  void renameGroup(String groupId, String newName) {
-    final group = _photoGroups.firstWhere((group) => group.date.toString() == groupId);
+  void renameGroup(String groupId, String newName) async {
+    final db = DatabaseHelper();
+    await db.updatePhotoGroup(groupId, newName);
+    final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
     group.name = newName;
     notifyListeners();
   }
 
-  void deleteGroup(String groupId) {
-    _photoGroups.removeWhere((group) => group.date.toString() == groupId);
+  void deleteGroup(String groupId) async {
+    final db = DatabaseHelper();
+    await db.deletePhotoGroup(groupId);
+    _photoGroups.removeWhere((g) => g.id.toString() == groupId);
     if (_photoGroups.isEmpty) toggleEditMode();
     notifyListeners();
   }
 
-  void deletePhoto(String photoPath, String groupId) {
-    final group = _photoGroups.firstWhere((group) => group.date.toString() == groupId);
+  void deletePhoto(String photoPath, String groupId) async {
+    final fs = FileSystemHelper();
+    await fs.deletePhoto(photoPath);
+    final db = DatabaseHelper();
+    await db.deletePhoto(photoPath);
+    final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
     group.photos.remove(photoPath);
     notifyListeners();
   }

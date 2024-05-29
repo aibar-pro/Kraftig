@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kraftig/view_components/text_link.dart';
 import 'package:provider/provider.dart';
 
 import '../view_components/primary_button.dart';
+import '../view_components/text_link.dart';
 import '../view_models/login_view_model.dart';
 import '../resources/constants.dart';
 

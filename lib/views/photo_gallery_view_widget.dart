@@ -1,4 +1,4 @@
- import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +51,7 @@ class PhotoGalleryViewWidget extends StatelessWidget {
                   top: AppPadding.small,
                   bottom: AppPadding.small,
                 ),
-                onPressed: () => model.takePhoto(group.date.toString()), 
+                onPressed: () => model.takePhoto(group.id.toString()), 
                 icon: const Icon(Icons.photo_camera, size: AppFontSizes.body,),
               ),
               IconButton(
@@ -60,7 +60,7 @@ class PhotoGalleryViewWidget extends StatelessWidget {
                   top: AppPadding.small,
                   bottom: AppPadding.small,
                 ),
-                onPressed: () => model.pickImage(group.date.toString()), 
+                onPressed: () => model.pickImage(group.id.toString()), 
                 icon: const Icon(Icons.upload_file, size: AppFontSizes.body,),
               ),
               // IconButton(
@@ -82,14 +82,20 @@ class PhotoGalleryViewWidget extends StatelessWidget {
             ),
             itemCount: group.photos.length,
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  // Handle photo tap
+              return FutureBuilder<Uint8List>(
+                future: model.getDecryptedPhoto(group.photos[index]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Icon(Icons.error));
+                  } else {
+                    return Image.memory(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                    );
+                  }
                 },
-                child: Image.file(
-                  File(group.photos[index]),
-                  fit: BoxFit.cover,
-                ),
               );
             },
           ),

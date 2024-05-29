@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:kraftig/models/user_credential_model.dart';
+
+import '../models/user_credential_model.dart';
 import '../services/api_service.dart';
 
 class SignupViewModel extends ChangeNotifier {

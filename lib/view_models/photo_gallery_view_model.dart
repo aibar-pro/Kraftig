@@ -2,8 +2,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kraftig/view_models/profile_view_model.dart';
 
+import '../view_models/profile_view_model.dart';
 import '../models/photo_group.dart';
 import '../persistence/database_helper.dart';
 import '../persistence/file_system_helper.dart';
@@ -48,15 +48,12 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     if (image != null) {
       if (_photoGroups.isEmpty) {
         if (kDebugMode) {
-          print("Photo Gallery: Creating first group");
+          print("Photo Gallery: Creating first photo group");
         }
-        createGroup(null, DateTime.now(), userLogin);
+        await createGroup(null, DateTime.now(), userLogin);
       }
       final filename = image.name;
       final bytes = await image.readAsBytes();
-      if (kDebugMode) {
-          print("Photo Gallery: groups count - ${_photoGroups.length}");
-        }
       if (groupId != null ) {
         addPhoto(groupId, filename, bytes);
       } else {
@@ -72,7 +69,7 @@ class PhotoGalleryViewModel extends ChangeNotifier {
 
     if (image != null) {
       if (_photoGroups.isEmpty) {
-        createGroup(null, DateTime.now(), userLogin);
+        await createGroup(null, DateTime.now(), userLogin);
       }
       final filename = image.name;
       final bytes = await image.readAsBytes();
@@ -87,10 +84,10 @@ class PhotoGalleryViewModel extends ChangeNotifier {
 
   void addPhoto(String groupId, String filename,Uint8List bytes) async {
     final fs = FileSystemHelper();
-    await fs.savePhoto(filename, bytes);
+    final savedFile = await fs.savePhoto(filename, bytes);
     final db = DatabaseHelper();
     await db.insertPhoto({
-      'path': filename,
+      'path': savedFile.path,
       'group_id': int.parse(groupId),
     });
     final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
@@ -106,7 +103,7 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createGroup(String? name, DateTime date, String userLogin) async {
+  Future<void> createGroup(String? name, DateTime date, String userLogin) async {
     final db = DatabaseHelper();
     final groupId = await db.insertPhotoGroup({
       'name': name,
@@ -146,5 +143,10 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
     group.photos.remove(photoPath);
     notifyListeners();
+  }
+
+  Future<Uint8List> getDecryptedPhoto(String filePath) async {
+    final fs = FileSystemHelper();
+    return await fs.readPhoto(filePath);
   }
 }

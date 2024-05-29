@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:kraftig/models/auth_token_model.dart';
-import 'package:kraftig/models/user_credential_model.dart';
-import 'package:kraftig/models/user_profile_model.dart';
-import 'package:kraftig/persistence/secure_storage_helper.dart';
+
+import '../models/auth_token_model.dart';
+import '../models/user_credential_model.dart';
+import '../models/user_profile_model.dart';
+import '../persistence/secure_storage_helper.dart';
 
 class ApiService {
   final String baseUrl;
@@ -18,9 +19,10 @@ class ApiService {
     this.expiresIn = expiresIn;
   }
 
-  void logout() {
+  void logout() async {
     accessToken = null;
     expiresIn = null;
+    await SecureStorageHelper.deleteRefreshToken();
   }
 
   Future<void> saveToken(AuthTokenModel token) async {

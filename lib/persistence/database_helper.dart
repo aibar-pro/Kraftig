@@ -29,7 +29,7 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY,
         name TEXT,
         date TEXT,
-        login TEXT,
+        login TEXT
       )
     ''');
     await db.execute('''

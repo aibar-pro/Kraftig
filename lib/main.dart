@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'services/api_service.dart';
 import 'view_models/home_view_model.dart';
@@ -12,7 +13,9 @@ import 'views/home_view.dart';
 import 'views/login_view.dart';
 import 'views/profile_view.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
 

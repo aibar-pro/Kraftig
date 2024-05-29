@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kraftig/resources/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:popover/popover.dart';
 
 import '../view_models/photo_gallery_view_model.dart';
+import '../resources/constants.dart';
 import 'photo_gallery_edit_widget.dart';
 import 'photo_gallery_view_widget.dart';
 

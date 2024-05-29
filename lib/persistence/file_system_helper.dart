@@ -17,7 +17,15 @@ class FileSystemHelper {
 
   Future<File> _localFile(String filename) async {
     final path = await _localPath;
-    return File('$path/photos/$filename');
+    final file = File('$path/photos/$filename');
+    await _ensureDirectoryExists(file.parent);
+    return file;
+  }
+
+  Future<void> _ensureDirectoryExists(Directory directory) async {
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
   }
 
   Future<File> savePhoto(String filename, Uint8List bytes) async {

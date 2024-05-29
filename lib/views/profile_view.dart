@@ -1,8 +1,4 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:kraftig/view_components/inline_edit_button.dart';
-import 'package:kraftig/views/photo_gallery_view.dart';
 import 'package:provider/provider.dart';
 
 import '../resources/constants.dart';
@@ -10,6 +6,8 @@ import '../view_models/profile_view_model.dart';
 import '../view_components/primary_button.dart';
 import '../view_components/secondary_button.dart';
 import '../view_components/weight_picker_wrapper.dart';
+import '../view_components/inline_edit_button.dart';
+import '../views/photo_gallery_view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});

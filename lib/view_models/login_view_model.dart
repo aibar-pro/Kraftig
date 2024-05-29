@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:kraftig/models/user_credential_model.dart';
-import 'package:kraftig/models/user_profile_model.dart';
 
+import '../models/user_credential_model.dart';
+import '../models/user_profile_model.dart';
 import '../services/api_service.dart';
 import 'home_view_model.dart';
 
@@ -46,12 +46,14 @@ class LoginViewModel extends ChangeNotifier {
         return true;
       } else {
         _errorMessage = "Failed to fetch profile after login";
-        // Temporary implementation
+        // Temporary implementation: Create blank user profile
         final newProfile = await apiService.createUserProfile(UserProfileModel(login: userCredentials.login));
         if (newProfile != null) {
           homeViewModel.login(newProfile);
           notifyListeners();
           return true;
+        } else {
+          _errorMessage = "Failed to create default profile after login";
         }
       }
     } else {

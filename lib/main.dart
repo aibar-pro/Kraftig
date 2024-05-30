@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'services/api_service.dart';
+import 'view_models/fitness_plan_view_model.dart';
 import 'view_models/home_view_model.dart';
 import 'view_models/login_view_model.dart';
+import 'view_models/nutrition_plan_view_model.dart';
 import 'view_models/profile_view_model.dart';
 import 'view_models/photo_gallery_view_model.dart';
 import 'view_models/signup_view_model.dart';
@@ -25,7 +27,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final apiService = ApiService(baseUrl: 'http://0.0.0.0:8080');
-    final homeViewModel = HomeViewModel(apiService: apiService);
+    final nutritionPlanViewModel = NutritionPlanViewModel();
+    final fitnessPlanViewModel = FitnessPlanViewModel();
+    final homeViewModel = HomeViewModel(apiService: apiService, nutritionPlanViewModel: nutritionPlanViewModel, fitnessPlanViewModel: fitnessPlanViewModel);
     final profileViewModel = ProfileViewModel(apiService: apiService, homeViewModel: homeViewModel);
 
     return MultiProvider(
@@ -35,6 +39,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SignupViewModel(apiService: apiService)),
         ChangeNotifierProvider(create: (_) => profileViewModel),
         ChangeNotifierProvider(create: (_) => PhotoGalleryViewModel(profileViewModel: profileViewModel)),
+        ChangeNotifierProvider(create: (_) => NutritionPlanViewModel()),
+        ChangeNotifierProvider(create: (_) => FitnessPlanViewModel()),
       ],
       child: MaterialApp(
         title: 'Kraftig',

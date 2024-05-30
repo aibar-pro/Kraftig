@@ -71,9 +71,6 @@ class PhotoGalleryViewModel extends ChangeNotifier {
 
     if (image != null) {
       if (_photoGroups.isEmpty) {
-        if (kDebugMode) {
-          print("Photo Gallery: Creating first photo group");
-        }
         await createGroup(null, DateTime.now(), userLogin);
       }
       final filename = image.name;
@@ -116,7 +113,6 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     });
     final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
     group.photos.add(filename);
-    print("Saving file: $filename");
     notifyListeners();
   }
 
@@ -171,7 +167,6 @@ class PhotoGalleryViewModel extends ChangeNotifier {
   }
 
   Future<Uint8List> getDecryptedPhoto(String filename) async {
-    print("Reading file: $filename");
     final fs = FileSystemHelper();
     return await fs.readPhoto(filename);
   }

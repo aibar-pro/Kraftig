@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +56,7 @@ class PhotoGalleryEditWidget extends StatelessWidget {
                   bottom: AppPadding.small,
                 ),
                 onPressed: () {
-                  model.deleteGroup(group.date.toString());
+                  model.deleteGroup(group.id.toString());
                 }, 
                 icon: const Icon(Icons.delete, size: AppFontSizes.body,),
               ),
@@ -69,28 +68,42 @@ class PhotoGalleryEditWidget extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+              crossAxisSpacing: AppPadding.small,
+              mainAxisSpacing: AppPadding.small,
             ),
             itemCount: group.photos.length,
             itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Image.file(
-                    File(group.photos[index]),
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        model.deletePhoto(group.photos[index], group.date.toString());
-                      },
-                    ),
-                  ),
-                ],
+              return FutureBuilder<Uint8List>(
+                future: model.getDecryptedPhoto(group.photos[index]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    if (kDebugMode) {
+                      print(snapshot.error.toString());
+                    }
+                    return const Center(child: Icon(Icons.error));
+                  } else {
+                    return Stack(
+                      children: [
+                        Image.memory(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red.shade300),
+                            onPressed: () {
+                              model.deletePhoto(group.photos[index], group.id.toString());
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               );
             },
           ),

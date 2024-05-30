@@ -76,8 +76,8 @@ class PhotoGalleryViewWidget extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+              crossAxisSpacing: AppPadding.small,
+              mainAxisSpacing: AppPadding.small,
             ),
             itemCount: group.photos.length,
             itemBuilder: (context, index) {

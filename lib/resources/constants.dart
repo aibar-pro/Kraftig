@@ -13,6 +13,7 @@ class AppColors {
   static const Color textMediumEmphasis = Color(0x99373331);
   static const Color textLowEmphasis = Color(0x66373331);
   static const Color cardBackground = Color(0xAAf6e9e9);
+  static const Color whiteText = Color(0xFFe4f4fd);
 }
 
 class AppViewBackgrounds {

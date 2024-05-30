@@ -5,7 +5,7 @@
 It's a playground project inspired by one of the projects I participated in as a developer. Given I can’t just copy-paste the production code, I recreate the basic concepts by writing something similar to expand my GitHub portfolio and provide code samples for the sake of job seeking.
 
 ## App Demo GIF
-<img src="./resources/Kraftig_demo_20240527.gif" alt="App demo" width="350" height="auto"><br> App demo
+<img src="./resources/Kraftig_demo.gif" alt="App demo" width="350" height="auto"><br> App demo
 
 ## Features
 * **User Registration**: Sign up using a mobile number (not validating rn).

@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +87,9 @@ class PhotoGalleryViewWidget extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
+                    if (kDebugMode) {
+                      print(snapshot.error.toString());
+                    }
                     return const Center(child: Icon(Icons.error));
                   } else {
                     return Image.memory(

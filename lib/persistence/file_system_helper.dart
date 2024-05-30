@@ -36,8 +36,12 @@ class FileSystemHelper {
 
   Future<Uint8List> readPhoto(String filename) async {
     final file = await _localFile(filename);
-    final encryptedData = await file.readAsString();
-    return EncryptionHelper.decryptFile(encryptedData);
+    if (await file.exists()) {
+      final encryptedData = await file.readAsString();
+      return EncryptionHelper.decryptFile(encryptedData);
+    } else {
+      throw Exception("File not found: $filename");
+    }
   }
 
   Future<void> deletePhoto(String filename) async {

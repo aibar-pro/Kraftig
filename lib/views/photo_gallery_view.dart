@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:popover/popover.dart';
 
 import '../view_models/photo_gallery_view_model.dart';
 import '../resources/constants.dart';
@@ -38,27 +37,50 @@ class PhotoGalleryView extends StatelessWidget {
                       icon: const Icon(Icons.upload_file, size: AppFontSizes.subheadline,),
                     ),
                   if (model.photoGroups.isNotEmpty) 
-                  //FIXME: Popover position 
-                    IconButton(
-                      onPressed: () => showPopover(
-                        context: context,
-                        bodyBuilder: (context) => 
-                          Column(
-                            children: [
-                              TextButton.icon(
-                                onPressed: () => model.toggleEditMode(), 
-                                label: const Text("Edit gallery", style: AppTextStyles.body,),
-                                icon: const Icon(Icons.edit, size: AppFontSizes.body,),
+                    Builder(
+                      builder: (context) {
+                        return IconButton(
+                          onPressed: () {
+                            final RenderBox button = context.findRenderObject() as RenderBox;
+                            final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                            final Offset position = button.localToGlobal(Offset.zero, ancestor: overlay);
+                            final RelativeRect rect = RelativeRect.fromRect(
+                              Rect.fromPoints(
+                                position,
+                                position.translate(button.size.width, button.size.height),
                               ),
-                              TextButton.icon(
-                                onPressed: () => model.createGroup(null, DateTime.now(), model.userLogin), 
-                                label: const Text("Add group", style: AppTextStyles.body,),
-                                icon: const Icon(Icons.edit, size: AppFontSizes.body,),
-                              ),
-                            ],
-                          ), 
-                      ),
-                      icon: const Icon(Icons.more_vert, size: AppFontSizes.subheadline,),
+                              Offset.zero & overlay.size,
+                            );
+                            showMenu(
+                              context: context,
+                              position: rect,
+                              items: [
+                                PopupMenuItem(
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close the popover
+                                      model.toggleEditMode();
+                                    },
+                                    icon: const Icon(Icons.edit, size: AppFontSizes.body),
+                                    label: const Text("Edit gallery", style: AppTextStyles.body),
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close the popover
+                                      model.createGroup(null, DateTime.now(), model.userLogin);
+                                    },
+                                    icon: const Icon(Icons.add, size: AppFontSizes.body),
+                                    label: const Text("Add group", style: AppTextStyles.body),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                          icon: const Icon(Icons.more_vert, size: AppFontSizes.subheadline),
+                        );
+                      },
                     ),
                 ],
               ),

@@ -225,12 +225,18 @@ class ProfileView extends StatelessWidget {
                 if (!context.mounted) return;
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profile updated successfully')),
+                    SnackBar(
+                      content: const Text('Profile updated successfully'),
+                      backgroundColor: Colors.green.shade300,
+                    ),
                   );
                   model.toggleEditMode();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to update profile')),
+                    SnackBar(
+                      content: const Text('Failed to update profile'),
+                      backgroundColor: Colors.red.shade300,
+                    ),
                   );
                 }
               },
@@ -241,84 +247,4 @@ class ProfileView extends StatelessWidget {
       ],
     );
   }
-
-  // Widget _buildPhotoGallery(BuildContext context, ProfileViewModel model) {
-  //   return Column(
-  //     children: [
-  //       Row(
-  //         children: [
-  //           const Expanded(
-  //             child: Text(
-  //               'Gallery',
-  //               style: AppTextStyles.subheadline,
-  //             ),
-  //           ),
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.end,
-  //             children: [
-  //               IconButton(
-  //                 padding: const EdgeInsets.only(
-  //                   left: AppPadding.small,
-  //                   top: AppPadding.small,
-  //                   bottom: AppPadding.small,
-  //                 ),
-  //                 onPressed: () => model.takePhoto(), 
-  //                 icon: const Icon(Icons.photo_camera, size: AppFontSizes.subheadline,),
-  //               ),
-  //               IconButton(
-  //                 padding: const EdgeInsets.only(
-  //                   left: AppPadding.small,
-  //                   top: AppPadding.small,
-  //                   bottom: AppPadding.small,
-  //                 ),
-  //                 onPressed: () => model.pickImage(), 
-  //                 icon: const Icon(Icons.upload_file, size: AppFontSizes.subheadline,),
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //        ...model.photoGroups.map((group) => _buildPhotoGroup(context, group, model)),
-        // Container(
-        //   padding: const EdgeInsets.all(AppPadding.medium),
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(AppBorderRadius.medium),
-        //     color: AppColors.cardBackground,
-        //   ),
-        //   child: Stack(
-        //     children: [
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.end,
-        //         children: [
-        //           InlineEditButton(onPressed: () {}),
-        //         ],
-        //       ),
-        //       const SizedBox(height: AppPadding.medium),
-        //       GridView.builder(
-        //         shrinkWrap: true,
-        //         physics: const NeverScrollableScrollPhysics(),
-        //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        //           crossAxisCount: 3,
-        //           crossAxisSpacing: 8,
-        //           mainAxisSpacing: 8,
-        //         ),
-        //         itemCount: model.photos.length,
-        //         itemBuilder: (context, index) {
-        //           return GestureDetector(
-        //             onTap: () {
-        //               // Handle photo tap
-        //             },
-        //             child: Image.file(
-        //               File(model.photos[index]),
-        //               fit: BoxFit.cover,
-        //             ),
-        //           );
-        //         },
-        //       ),          
-        //     ],
-        //   ),
-        // ),
-//       ],
-//     );
-//   }
 }

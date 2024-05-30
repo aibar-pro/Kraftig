@@ -14,10 +14,27 @@ class ProfileViewModel extends ChangeNotifier {
   bool _isEditing = false;
 
   ProfileViewModel({required this.apiService, required this.homeViewModel}) {
-     _userProfile = homeViewModel.userProfile;
+    _userProfile = homeViewModel.userProfile;
+    homeViewModel.addListener(_onHomeViewModelChanged);
+    if (_userProfile != null) {
+      fetchProfile();
+    }
   }
 
-  // UserProfileModel? get userProfile => _userProfile;
+  @override
+  void dispose() {
+    homeViewModel.removeListener(_onHomeViewModelChanged);
+    super.dispose();
+  }
+
+  void _onHomeViewModelChanged() {
+    _userProfile = homeViewModel.userProfile;
+    if (_userProfile != null) {
+      fetchProfile();
+    }
+    notifyListeners();
+  }
+
   UserProfileModel? get userProfile => homeViewModel.userProfile;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -83,6 +100,7 @@ class ProfileViewModel extends ChangeNotifier {
     _isLoading = false;
     if (result) {
       _errorMessage = null;
+      homeViewModel.setUserProfile(_userProfile!); 
       notifyListeners();
       return true;
     } else {

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PhotoGalleryViewModel(profileViewModel: profileViewModel)),
       ],
       child: MaterialApp(
-        title: 'Karftig',
+        title: 'Kraftig',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
           useMaterial3: true,

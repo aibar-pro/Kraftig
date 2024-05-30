@@ -13,12 +13,33 @@ class PhotoGalleryViewModel extends ChangeNotifier {
   List<PhotoGroup> _photoGroups = [];
   bool _isEditing = false;
 
-  PhotoGalleryViewModel({required this.profileViewModel});
+  PhotoGalleryViewModel({required this.profileViewModel}) {
+    profileViewModel.addListener(_onProfileViewModelChanged);
+     if (profileViewModel.userProfile != null) {
+      loadPhotoGroups(profileViewModel.userProfile!.login);
+    }
+  }
+
+  @override
+  void dispose() {
+    profileViewModel.removeListener(_onProfileViewModelChanged);
+    super.dispose();
+  }
+
+  void _onProfileViewModelChanged() {
+    final login = profileViewModel.userProfile?.login;
+    if (login != null) {
+      loadPhotoGroups(userLogin);
+    } else {
+      _photoGroups = [];
+      notifyListeners();
+    }
+  }
 
   List<PhotoGroup> get photoGroups => _photoGroups;
   bool get isEditing => _isEditing;
 
-  String get userLogin => profileViewModel.userProfile!.login;
+  String get userLogin => profileViewModel.userProfile?.login ?? '';
 
   void toggleEditMode() {
     _isEditing = !_isEditing;
@@ -37,6 +58,9 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     for (var group in _photoGroups) {
       final photos = await db.queryPhotosByGroupId(group.id);
       group.photos = photos.map((p) => p['path'].toString()).toList();
+      for (var photo in group.photos) {
+        print('Photo path read: $photo');
+      }
     }
     notifyListeners();
   }
@@ -82,16 +106,17 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     }
   }
 
-  void addPhoto(String groupId, String filename,Uint8List bytes) async {
+  void addPhoto(String groupId, String filename, Uint8List bytes) async {
     final fs = FileSystemHelper();
-    final savedFile = await fs.savePhoto(filename, bytes);
+    await fs.savePhoto(filename, bytes);
     final db = DatabaseHelper();
     await db.insertPhoto({
-      'path': savedFile.path,
+      'path': filename,
       'group_id': int.parse(groupId),
     });
     final group = _photoGroups.firstWhere((g) => g.id.toString() == groupId);
     group.photos.add(filename);
+    print("Saving file: $filename");
     notifyListeners();
   }
 
@@ -145,8 +170,9 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Uint8List> getDecryptedPhoto(String filePath) async {
+  Future<Uint8List> getDecryptedPhoto(String filename) async {
+    print("Reading file: $filename");
     final fs = FileSystemHelper();
-    return await fs.readPhoto(filePath);
+    return await fs.readPhoto(filename);
   }
 }

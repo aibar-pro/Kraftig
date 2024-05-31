@@ -14,12 +14,16 @@ class NutritionBanner extends StatelessWidget {
       builder: (context, model, child) {
         return GestureDetector(
           onTap: () {
-            if (model.state == PlanState.invitation) {
-              model.requestNewPlan();
-            } else if (model.state == PlanState.requestInProgress) {
-              model.viewRequestStatus();
-            } else if (model.state == PlanState.activePlan) {
-              model.viewPlanDetails();
+            if (model.userProfile != null) {
+              if (model.state == PlanState.invitation) {
+                model.requestNewPlan();
+              } else if (model.state == PlanState.requestInProgress) {
+                model.viewRequestStatus();
+              } else if (model.state == PlanState.activePlan) {
+                model.viewPlanDetails();
+              }
+            } else {
+              Navigator.pushNamed(context, '/login');
             }
           },
           child: Container(

@@ -118,18 +118,18 @@ class ApiService {
     );
   }
 
-  Future<UserProfileModel?> createUserProfile(UserProfileModel profile) async {
-    return _performRequest(
-      () => http.post(
-        Uri.parse('$baseUrl/user/profile'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-        body: jsonEncode(profile.toJson()),
-      ),
-      (data) => UserProfileModel.fromJson(data),
+  Future<bool> createUserProfile(UserProfileModel profile) async {
+    final url = Uri.parse('$baseUrl/user/profile');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode(profile.toJson()),
     );
+
+    return response.statusCode == 201;
   }
 
   Future<bool> updateUserProfile(UserProfileModel profile) async {

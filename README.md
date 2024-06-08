@@ -1,17 +1,17 @@
 # Kraftig
 
-**Kraftig** (which means “powerful" in German) is a mobile application designed to connect users with personal trainers. It enables them to receive customized fitness plans and online coaching service tailored to their specific needs, goals, and available equipment. The app facilitates interaction between users and trainers and supports the management of subscription payments.
+**Kraftig** (“powerful" in German) is a mobile application that connects users with wellbeing experts. It enables them to receive customized fitness and nutrition plans and online coaching services tailored to their needs, goals, and available equipment. The app facilitates interaction between users and trainers and supports the management of subscription payments.
 
-It's a playground project inspired by one of the projects I participated in as a developer. Given I can’t just copy-paste the production code, I recreate the basic concepts by writing something similar to expand my GitHub portfolio and provide code samples for the sake of job seeking.
+It's a playground project inspired by one of the projects I participated in as a developer. Given that I can’t just copy-paste the production code, I recreate the basic concepts by writing something similar to expand my GitHub portfolio and provide code samples for the sake of job seeking.
 
 ## App Demo GIF
 <img src="./resources/Kraftig_demo.gif" alt="App demo" width="350" height="auto"><br> App demo
 
 ## Features
 * **User Registration**: Sign up using a mobile number (not validating rn).
-* **Profile Management**: Users can enter and update their measurements and upload photos.
-* **Custom Workout Plans**: Users can request customized workout plans or online coaching from certified personal trainers.
-* **Payment Integration**: Supports one-time and recurring payments for workout plans or online coaching (won't implement; proprietary acquiring widget must be considered)
+* **Profile Management**: Users can enter their measurements and upload photos to encrypted storage.
+* **Custom Wellbeing Plans**: Users can request customized fitness or nutrition plans or online coaching from certified professionals.
+* **Payment Integration**: Supports one-time and recurring payments for selected services (won't implement; proprietary acquiring widget must be considered)
 
 ## Architecture
 The project follows the MVVM (Model-View-ViewModel) architecture approach.

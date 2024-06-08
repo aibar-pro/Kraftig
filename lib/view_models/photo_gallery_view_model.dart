@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -58,9 +56,6 @@ class PhotoGalleryViewModel extends ChangeNotifier {
     for (var group in _photoGroups) {
       final photos = await db.queryPhotosByGroupId(group.id);
       group.photos = photos.map((p) => p['path'].toString()).toList();
-      for (var photo in group.photos) {
-        print('Photo path read: $photo');
-      }
     }
     notifyListeners();
   }

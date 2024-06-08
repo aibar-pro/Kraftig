@@ -48,10 +48,15 @@ class LoginViewModel extends ChangeNotifier {
         _errorMessage = "Failed to fetch profile after login";
         // Temporary implementation: Create blank user profile
         final newProfile = await apiService.createUserProfile(UserProfileModel(login: userCredentials.login));
-        if (newProfile != null) {
-          homeViewModel.login(newProfile);
-          notifyListeners();
-          return true;
+        if (newProfile) {
+          final fetchedNewProfile = await apiService.fetchUserProfile(userCredentials.login);
+          if (fetchedNewProfile != null ) {
+            homeViewModel.login(fetchedNewProfile);
+            notifyListeners();
+            return true;
+          } else {
+            _errorMessage = "Failed to fetch default profile after login";
+          }
         } else {
           _errorMessage = "Failed to create default profile after login";
         }
